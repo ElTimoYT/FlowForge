@@ -3,10 +3,7 @@ package com.flowforge.backend.controllers;
 import com.flowforge.backend.entities.User;
 import com.flowforge.backend.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -27,4 +24,8 @@ public class UserController {
         return this.userService.findById(id).orElse(null);
     }
 
+    @PostMapping("/add")
+    public User add(@RequestBody User user) {
+        return this.userService.save(user);
+    }
 }
