@@ -1,0 +1,59 @@
+services:
+
+  mysql:
+    image: mysql:8.4
+    container_name: flowforge-mysql
+    restart: unless-stopped
+
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+
+    ports:
+      - "${MYSQL_PORT}:3306"
+
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - ./infra/mysql/init.sql:/docker-entrypoint-initdb.d/init.sql
+
+    command: >
+      --character-set-server=utf8mb4
+      --collation-server=utf8mb4_unicode_ci
+
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  n8n:
+    image: n8nio/n8n:latest
+    container_name: n8n-lab
+    restart: always
+    ports:
+      - "${FLOWFORGE_PORT}:5678"  # El puerto estándar de n8n
+    environment:
+      - N8N_BASIC_AUTH_ACTIVE=false
+      - N8N_BASIC_AUTH_USER=${FLOWFORGE_USER}  # ¡Cambia esto si quieres!
+      - N8N_BASIC_AUTH_PASSWORD=${FLOWFORGE_PASS}  # ¡Cambia esto si quieres!
+      # Estas variables ayudan a evitar errores en local
+      - N8N_SECURE_COOKIE=false
+      - TZ=Europe/Madrid # Para que los cron jobs vayan en tu hora
+    env_file:
+    - .env
+    volumes:
+      - n8n_data:/home/node/.n8n # Guarda tus flujos aunque apagues el PC
+    networks:
+      - flowforge-net
+
+
+networks:
+  flowforge-net:
+    driver: bridge
+
+volumes:
+  mysql_data:
+  n8n_data:
+  

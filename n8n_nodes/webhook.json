@@ -1,0 +1,75 @@
+{
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "mi-prueba",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        0,
+        0
+      ],
+      "id": "7430bf07-9ca9-4048-ac3e-ac4445534f35",
+      "name": "Webhook",
+      "webhookId": "67a94063-04cb-49f4-89a7-073ee69867f7"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "n8n-nodes-base.filter",
+      "typeVersion": 2.3,
+      "position": [
+        208,
+        0
+      ],
+      "id": "bb80cd42-feb8-4f1f-ba0e-3417c9209bc1",
+      "name": "Filter"
+    },
+    {
+      "parameters": {
+        "url": "hhtp://example.com/index.html",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.3,
+      "position": [
+        416,
+        0
+      ],
+      "id": "f4e17c7f-1916-44e7-8878-7e7ae9ac5190",
+      "name": "HTTP Request"
+    }
+  ],
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Filter",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Filter": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "pinData": {},
+  "meta": {
+    "instanceId": "6f791d7eceba012286054a2d141b3763975f8a44a41774e83327502697c76631"
+  }
+}
